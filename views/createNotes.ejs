@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Bubblegum Sans' rel='stylesheet'> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- css -->
+    <style>
+        /* prevent hidden elements from being displayed */
+        .hidden-field {
+            display: none;
+        } 
+        
+        /* side nav */
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #4369CA;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: white;
+            width: 200%;
+            background-color: darkblue;
+        }
+
+        .dropbtn {
+            /* margin-left: 5%; */
+            background-color: #4369CA;
+            color: white;
+            padding: 16px;
+            font-size: 25px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            /* margin-left: 5%; */
+            width: 100%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+        .show {
+            display: block;
+        }
+
+        /* top nav (bar for editing tools) */
+        .topnav {
+            margin-top: 5%;
+            margin-left: 25%;
+            width: 60%;
+            background-color: white;
+            color: black;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .topnav a {
+            float: left;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color:white;
+            color: blue;
+        }
+
+        .topnav a.active {
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- side nav -->
+    <div id="mySidenav" class="sidenav">
+        <h1>
+            <!-- show user's name, on click direct user to user profile page -->
+            <% users.forEach(function(user){ %>
+                <a href="/userprofile"><%= user.user_name %></a>
+            <% }) %>
+        </h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h1>
+         <a href="/getAllNotes">home</a>   
+        </h1>
+    </div>
+    <!-- top nav allows user to change template and font -->
+    <div class="topnav" style="border-radius: 10px;">
+        <div class="dropdown">
+            <select id="note_template" name="note_template" onchange="applyTextareaStyle()"  style="margin-left:0.5%; width: 20%; height: 100%; border-radius: 5px;  font-size: 20px; text-align: center;"  >
+                <option value="blank">blank</option>
+                <option value="line">line</option>
+            </select>
+            
+            <select id="note_font" name="note_font" onchange="changeFont(this)"  style="width: 20%; border-radius: 5px; height: 100%; font-size: 20px; text-align: center;">
+                <option value="Arial">Arial</option>
+                <option value="Lucida Console">Lucida Console</option>
+                <option value="Lucida Handwriting">Lucida Handwriting</option>
+                <option value="Times New Roman">Times New Roman</option>
+            </select>
+            
+            <button style="border-radius: 5px; background-color: white; width: 20%; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">MIC</button>
+            <button style="border-radius: 5px; background-color: white; width: auto; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">speech to text conversion</button>
+        </div>
+    </div>
+      
+    <!-- part 1 form contains the note content, note template and font, which is passed to form 2 upon form submission -->
+    <form id="part1-form" style="margin-left: 10%; width: 85%;">
+        <textarea id="note_content" name="note_content" placeholder="enter the note content" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center; resize: none;" rows="18" required></textarea>
+        <br>
+        <br>
+        <input type="hidden" name="note_template" value="">
+        <input type="hidden" name="note_font" value="">
+        <button type="button" id="next-button" style="margin-left:7.5%; margin-top:1%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;">SAVE</button>
+    </form>
+
+    <!-- part 2 form will submit all the note details, including note title, subtitle, folder name, note content, template and font -->
+    <form id="part2-form" action="/createNote" method="post" style="margin-left: 20%;  margin-top: 10%; width: 85%; display: none;">
+        <input id="note_title" type="text" name="note_title" placeholder="enter the note title" style="width: 50%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;"/>
+        <br>
+        <br>
+        <input id="note_subtitle" type="text" name="note_subtitle" placeholder="enter the note subtitle" style="width: 50%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;"/>
+        <br>
+        <br>
+        <select style="width: 52%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;" name="folder" id="folder">
+            <% folders.forEach(function(folder) { %>
+                <option value="<%= folder.folder_id %>"><%= folder.folder_name %></option>
+            <% }) %>
+        </select>
+                
+        <input id="note_content_hidden" type="hidden" name="note_content" value="">
+        <input id="note_template_hidden" type="hidden" name="note_template" value="">
+        <input id="note_font_hidden" type="hidden" name="note_font" value="">
+        
+        <!-- folder droplist will loop thorugh all the folders created by this user -->
+        <% folders.forEach(function(folder) { %>
+            <input type="hidden" value="<%= folder.folder_id %>">
+        <% }) %>
+        <button type="submit" id="submit-button">Submit</button>
+    </form>
+
+    <script>
+        const part1Form = document.getElementById("part1-form");
+        const part2Form = document.getElementById("part2-form");
+        const nextButton = document.getElementById("next-button");
+        const noteContentHidden = document.getElementById("note_content_hidden");
+        const noteTemplateHidden = document.getElementById("note_template_hidden");
+        const noteFontHidden = document.getElementById("note_font_hidden");
+
+        // Add an event listener to the button to switch to Part 2 form
+        nextButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            // getting the drolist value and storing it.
+            const noteContentInput = document.getElementById("note_content");
+            const noteContentValue = noteContentInput.value;
+
+            const noteTemplateInput = document.getElementById("note_template");
+            const noteTemplateValue = noteTemplateInput.value;
+
+            const noteFontInput = document.getElementById("note_font");
+            const noteFontValue = noteFontInput.value;
+    
+            // Set the value to the hidden field in part2-form
+            noteContentHidden.value = noteContentValue;
+            noteTemplateHidden.value = noteTemplateValue;
+            noteFontHidden.value = noteFontValue;
+    
+            // hide part 1 form, show part 2 form
+            part1Form.style.display = "none";
+            part2Form.style.display = "block";
+        });
+
+        
+        
+        function applyTextareaStyle() {
+            // declare the textare and droplist based on id
+            const dropdown = document.getElementById("note_template");
+            const textarea = document.getElementById("note_content");
+
+            // determine template based on the value
+            if (dropdown.value === "line") {
+                console.log("line");
+                // Apply the line style to the textarea
+                textarea.style.background = "linear-gradient(to bottom, transparent 23px, #ddd 23px, #ddd 24px, transparent 24px), linear-gradient(to right, transparent 5px, #ddd 5px, #ddd 6px, transparent 6px)";
+                textarea.style.backgroundSize = "100% 25px";
+                textarea.style.lineHeight = "25px";
+            } 
+            if(dropdown.value === 'blank') {
+                console.log("blank");
+                // Reset the textarea style to default (blank)
+                textarea.style.background = "none";
+                textarea.style.lineHeight = "normal";
+            }
+        }
+
+        // set the font based on the droplist value
+        function changeFont(font){
+            const selectedFont = font.value;
+            const textarea = document.getElementById("note_content");
+            textarea.style.fontFamily = selectedFont;
+        }
+        
+    </script>
+    
+    
+</body>
+</html>

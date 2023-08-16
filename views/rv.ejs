@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Bubblegum Sans' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+
+    <!-- css -->
+    <style>
+       .hidden-field {
+            display: none;
+        }
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #4369CA;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: white;
+            width: 200%;
+            background-color: darkblue;
+        }
+
+        .dropbtn {
+            /* margin-left: 5%; */
+            background-color: #4369CA;
+            color: white;
+            padding: 16px;
+            font-size: 25px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            /* margin-left: 5%; */
+            width: 100%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+        .show {
+            display: block;
+        }
+        .topnav {
+            margin-top: 5%;
+            margin-left: 25%;
+            width: 60%;
+            background-color: white;
+            color: black;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .topnav a {
+            float: left;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- side nav -->
+    <div id="mySidenav" class="sidenav">
+        <h1>
+            <!-- user name, onclick direct user to user profile page -->
+            <% users.forEach(function(user){ %>
+                <a href="/userprofile"><%= user.user_name %></a>
+            <% }) %>
+        </h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <!-- direct user to home page -->
+        <a href="/getAllNotes">home</a>
+    </div>
+    
+    
+
+    <!-- form to update the note content, template and font -->
+    <form id="summary" style="margin-left: 10%; width: 85%">
+            <textarea type="text" id="summary" name="summary" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;" rows="20"></textarea>
+            <button type="submit" id="updateBtn" style="margin-left:7.5%; margin-top:1%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;">SAVE</button>
+       
+    </form>
+
+    
+</body>
+
+</html>
+

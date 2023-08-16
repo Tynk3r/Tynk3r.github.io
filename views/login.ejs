@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome! This is the login page!</title>
+
+    <!-- css -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #4369CA;
+        }
+
+        .container {
+            margin-left: 8%;
+            /* border: solid 1px; */
+            margin-right: 55%;
+            text-align: center;
+            margin-top: 5%;
+            min-height: 270px;
+            border-radius: 10px;
+
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            flex: 1;
+            text-align: center;
+            margin-left: 5%;
+        }
+        
+        .form {
+            flex: 2;
+            text-align: center;
+        }
+    </style>
+   
+    <!-- this is to valiadate input -->
+    <script>
+        function InputValidation() {
+            let x = document.forms["loginForm"]["user_name"].value;
+            let y = document.forms["loginForm"]["user_password"].value;
+            let loginBtn = document.getElementById('loginBTN');
+            if (x === "" || y === "") {
+                loginBtn.disabled = true;
+                loginBtn.style.backgroundColor = "lightgray"; // Set your desired style for the disabled button
+                loginBtn.style.color = "black";
+                loginBtn.style.cursor = "not-allowed"; // Optional: Change cursor style to indicate disabled
+                return false;
+            }
+            else {
+                loginBtn.disabled = false;
+                loginBtn.style.backgroundColor = "white";
+                loginBtn.style.borderColor = "#ce8f68";
+                loginBtn.style.color = "black"; // Set your desired style for the normal button
+                loginBtn.style.cursor = "pointer"; // Optional: Change cursor style back to default
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Call the InputValidation function when the page loads
+            InputValidation();
+
+            // Add event listeners for the input fields
+            document.querySelector('#user_name').addEventListener("input", InputValidation);
+            document.querySelector('#user_password').addEventListener("input", InputValidation);
+        });
+    </script>
+</head>
+
+<body>
+     <!-- This is the login page -->
+     <div class="flex">
+
+        <div class="form">
+            <div id="wcb">
+                <h1 style="color:white; font-size: 70px; margin-top: 10%;">Welcome back</h1>
+            </div>
+            <div id="par">
+                <h2 style="color:white; font-size: 60px;">Sign in to NoteGenius</h2>
+            </div>
+            <br>
+            <!-- this is the login form -->
+            <div class="form-container">
+                <form id="loginForm" action="login" method="post" style="margin-top: 3%;">
+                    <div id="un">
+                        <label style="color:white; margin-left: -56%; font-size: 15px;">Username</label>
+                    </div>
+                    
+                    <input id="user_name" type="text" name="user_name" placeholder="Username"
+                        style="width: 65%; border-radius: 10px; height: 40px; font-size: 20px; text-align: left;" />
+                    
+                    <br>
+                    <br>
+
+                    <div id="pw">
+                        <label style="color:white; margin-left: -56.5%; font-size: 15px; ">Password</label>
+                    </div>
+                    <input id="user_password" type="password" name="user_password" placeholder="Password"
+                        style="width: 65%; border-radius: 10px; height: 40px; font-size: 20px; text-align: left;" />
+                    <br>
+                    <br>
+                
+                    <button id="loginBTN" type="submit" style="width:30%; border-radius: 5px; height: 30px; margin-top: 5%;"> LOGIN </button>
+                </form>
+                <br>
+                <br>
+                <!-- link to direct user to register page -->
+                <a style="color: white;" href="/register">Create New Account</a>
+            </div>
+        </div>
+
+        <!-- this is the logo -->
+        <div class="logo">
+            <a href="/login">
+                <img src="/logo.png" alt="logo" style="height: 700px; width: 700px; margin-top: -5%;">
+                
+            </a>
+            <!-- this is the name of the website, written under the logo -->
+            <h1 style="margin-top: -30%; font-size: 60px; color:white"> NoteGenius </h1>
+        </div>
+        
+    </div>
+    
+</body>
+<br>
+<br>
+<br>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- css -->
+    <style>
+       .hidden-field {
+            display: none;
+        } .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #4369CA;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 6px 6px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: white;
+            width: 200%;
+            background-color: darkblue;
+        }
+
+        .dropbtn {
+            /* margin-left: 5%; */
+            background-color: #4369CA;
+            color: white;
+            padding: 16px;
+            font-size: 25px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            /* margin-left: 5%; */
+            width: 100%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+        .show {
+            display: block;
+        }
+
+        .topnav {
+            margin-top: 5%;
+            margin-left: 25%;
+            width: 60%;
+            background-color: white;
+            color: black;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .topnav a {
+            float: left;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color:white;
+            color: blue;
+        }
+
+        .topnav a.active {
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- side nav  -->
+    <div id="mySidenav" class="sidenav">
+        <h1>
+            <!-- show user's name, onclick direct user to user profile page -->
+            <% users.forEach(function(user){ %>
+                <a href="/userprofile"><%= user.user_name %></a>
+            <% }) %>
+        </h1>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h1>
+         <!-- direct user to home page -->
+         <a href="/getAllNotes">home</a>   
+        </h1>
+    </div>
+    <!-- <div class="topnav">
+        <div class="dropdown">
+            <select id="note_template" name="note_template" onchange="applyTextareaStyle()"  style="width: 52%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;"  >
+                <option value="blank">blank</option>    
+                <option value="line">line</option>
+            </select>
+        </div>
+    </div> -->
+      
+    <!-- allow user to change the note title, subtitle and folder name -->
+    <form id="updateform" action="/updateNoteSettings" method="post" style="margin-left: 20%;  margin-top: 10%; width: 85%;">
+        <% notes.forEach(function(note){ %>
+            <input id="note_title" type="text" name="note_title" value= <%= note.note_title %>" style="width: 50%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;"/>
+            <br>
+            <br>
+            <input id="note_subtitle" type="text" name="note_subtitle" value="<%= note.note_subtitle %>" style="width: 50%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;"/>
+            <br>
+            <br>
+            <select name="folder_id" id="folder_name" style="width: 52%; border-radius: 5px; height: 25px; font-size: 20px; text-align: center;" >
+                <% folders.forEach(function(folder) { %>
+                    <option value="<%= folder.folder_id %>"><%= folder.folder_name %></option>
+                <% }) %>
+            </select>
+            <input type="hidden" name="note_id" value="<%= note.note_id %>">
+            <button type="submit" id="submit-button">Submit</button>
+        <% }) %>
+    </form>
+    
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome! This is the register page!</title>
+
+    <!-- css -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #4369CA;
+        }
+
+        .container {
+            margin-left: 8%;
+            /* border: solid 1px; */
+            margin-right: 55%;
+            text-align: center;
+            margin-top: 5%;
+            min-height: 300px;
+            border-radius: 10px;
+            /* background-color: rgb(226, 208, 208); */
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            flex: 1;
+            text-align: center;
+            margin-left: 3%;
+        }
+        
+        .form {
+            flex: 2;
+            text-align: center;
+        }
+    </style>
+
+    <!-- this is the input validation page -->
+    <script>
+        function InputValidation() {
+            let a = document.forms["registerForm"]["name"].value;
+            let b = document.forms["registerForm"]["email"].value;
+            let c = document.forms["registerForm"]["password"].value;
+            let registerBtn = document.getElementById('registerBtn');
+
+            if (a === "" || b === "" || c === "") {
+                registerBtn.disabled = true;
+                registerBtn.style.backgroundColor = "lightgray"; // Set your desired style for the disabled button
+                registerBtn.style.color = "black";
+                registerBtn.style.cursor = "not-allowed"; // Optional: Change cursor style to indicate disabled
+                return false;
+            }
+            else {
+                registerBtn.disabled = false;
+                registerBtn.style.backgroundColor = "white";
+                registerBtn.style.borderColor = "#ce8f68";
+                registerBtn.style.color = "black"; // Set your desired style for the normal button
+                registerBtn.style.cursor = "pointer";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Call the InputValidation function 
+            InputValidation();
+
+            // Add event listeners for the input fields
+            document.querySelector('#name').addEventListener("input", InputValidation);
+            document.querySelector('#email').addEventListener("input", InputValidation);
+            document.querySelector('#password').addEventListener("input", InputValidation);
+        });
+
+    </script>
+</head>
+
+<body>
+    <!-- this is the register page of the website -->
+    <div class="flex">
+        <div class="form">
+            <div id="hlf" style="margin-left:2%; margin-top: 10%;">
+                <h1 style="color:white; font-size: 70px;">Hello, Friend!</h1>
+            </div>
+
+            <div id="cra" style="margin-left:2%;">
+                <h2 style="color:white; font-size: 60px;">Create Account Here!</h2>
+            </div>
+
+            <!-- this is the register form -->
+            <div class="form-container">
+                <form id="registerForm" action="register" method="POST" style="margin-top: 5%;">
+                    <label for="name" id="usrn" style="margin-left:-56%; color:white">Username</label>
+                    <br>
+                    <br>
+                    <input id="name" type="text" name="name" placeholder="Username"
+                        style="width: 65%; border-radius: 10px; height: 40px; font-size: 20px; text-align: left;" />
+                    <br>
+                    <br>
+                    <label for="email" id="eml" style="margin-left: -60%; color:white">Email</label>
+                    <br>
+                    <br>
+                    <input id="email" type="email" name="email" placeholder="Email"
+                        style="width: 65%; border-radius: 10px; height: 40px; font-size: 20px; text-align: left;" />
+                    <br>
+                    <br>
+                    <label for="password" id="pwd" style="margin-left:-57%; color:white">Password</label>
+                    <br>
+                    <br>
+                    <input id="password" type="password" name="password" placeholder="Password"
+                        style="width: 65%; border-radius: 10px; height: 40px; font-size: 20px; text-align: left;" />
+                    <br>
+                    <button id="registerBtn" type="submit"
+                        style="width:30%; border-radius: 5px; height: 30px; margin-top: 5%;">Register</button>
+                    <br>
+                </form>
+            </div>
+        </div>
+
+        <!-- this is the logo of the website, clicking on the logo will direct the user back to the login page -->
+        <div class="logo">
+            <a href="/login">
+                <img src="/logo.png" alt="logo" style="height: 700px; width: 700px; margin-top: -3%;">
+                
+            </a>
+            <!-- the name of the website is written under the logo -->
+            <h1 style="margin-top: -30%; color: white; font-size: 60px;">NoteGenius</h1>
+        </div>
+        
+    </div>
+
+    
+
+</body>
+
+</html>
