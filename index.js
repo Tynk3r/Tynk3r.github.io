@@ -16,7 +16,7 @@ global.db = new sqlite3.Database('./database.db',function(err){
   }else{
     console.log("Database connected");
     global.db.run("PRAGMA foreign_keys=ON"); //This tells SQLite to pay attention to foreign key constraints
-  }
+  } // testing
 });
 
 app.use(session({
