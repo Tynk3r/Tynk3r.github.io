@@ -136,6 +136,14 @@
                     <option value="Lucida Handwriting" <% if (note.note_font === 'Lucida Handwriting') { %>selected<% } %>>Lucida Handwriting</option>
                     <option value="Times New Roman" <% if (note.note_font === 'Times New Roman') { %>selected<% } %>>Times New Roman</option>
                 </select>
+
+                <select id="note_fontsize_<%= note.note_id %>" name="note_fontsize" onchange="changeFontSize(this, '<%= note.note_id %>')"  style="width: auto; border-radius: 5px; height: 100%; font-size: 20px; text-align: center;">
+                    <option value="16px" <% if (note.note_fontsize === '16px') { %>selected<% } %>>16</option>
+                    <option value="17px" <% if (note.note_fontsize === '17px') { %>selected<% } %>>17</option>
+                    <option value="18px" <% if (note.note_fontsize === '18px') { %>selected<% } %>>18</option>
+                    <option value="19px" <% if (note.note_fontsize === '19px') { %>selected<% } %>>19</option>
+                    <option value="20px" <% if (note.note_fontsize === '20px') { %>selected<% } %>>20</option>
+                </select>
                 <button style="border-radius: 5px; background-color: white; width: 20%; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">MIC</button>
                 <button style="border-radius: 5px; background-color: white; width: auto; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">speech to text conversion</button>
             <% }) %>
@@ -166,12 +174,13 @@
                 </script>
             <% } %>
              -->
-            <textarea type="text" id="note_content_<%= note.note_id %>" name="note_content" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;" rows="20"><%= note.note_content %></textarea>
+            <textarea type="text" id="note_content_<%= note.note_id %>" name="note_content" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; text-align: center;" rows="20"><%= note.note_content %></textarea>
             <br>
             <br>
             <input type="hidden"  name="note_id" value="<%= note.note_id %>">
             <input type="hidden"  name="note_template" value="" >
             <input type="hidden" id="note_font" name="note_font" value="" >
+            <input type="hidden" id="note_fontsize" name="note_fontsize" value="">
             <button type="submit" id="updateBtn" style="margin-left:7.5%; margin-top:1%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;">SAVE</button>
         <% }) %>
     </form>
@@ -243,6 +252,55 @@
         <% } %>
     <% }) %>  
 
+
+    <!-- check the font size value in the db -->
+    <% notes.forEach(function(note) { %>
+        <!-- if the value is Arial, the font will be shown as Arial -->
+        <% if(note.note_fontsize === '16px') { %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textarea = document.getElementById("note_content_<%= note.note_id %>");
+                    textarea.style.fontSize = "16px";
+                });
+            </script>
+        <% } %>
+        <!-- if the value is Lucida Console, the font will be shown as Lucida Console -->
+        <% if(note.note_fontsize === '17px') { %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textarea = document.getElementById("note_content_<%= note.note_id %>");
+                    textarea.style.fontSize = "17px";
+                });
+            </script>
+        <% } %>
+        <!-- if the value is Lucida Handwriting, the font will be shown as Lucida Handwriting -->
+        <% if(note.note_fontsize === '18px') { %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textarea = document.getElementById("note_content_<%= note.note_id %>");
+                    textarea.style.fontSize= "18px";
+                });
+            </script>
+        <% } %>
+        <!-- if the value is Times New Roman, the font will be shown as Times New Roman -->
+        <% if(note.note_fontsize === '19px') { %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textarea = document.getElementById("note_content_<%= note.note_id %>");
+                    textarea.style.fontSize = "19px";
+                });
+            </script>
+        <% } %>
+        <% if(note.note_fontsize === '20px') { %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textarea = document.getElementById("note_content_<%= note.note_id %>");
+                    textarea.style.fontSize = "20px";
+                });
+            </script>
+        <% } %>
+    <% }) %>  
+
     <script>
 
         const updateBtn = document.getElementById("updateBtn");
@@ -251,10 +309,12 @@
             const selectedNote = document.querySelectorAll('[id^="note_template_"]');
             const noteTemplateInput = document.querySelector('input[name="note_template"]');
             const noteFontInput = document.querySelector('input[name="note_font"]');
+            const noteFontSizeInput = document.querySelector('input[name="note_fontsize"]');
 
             selectedNote.forEach((dropdown) => {
                 const noteId = dropdown.id.replace("note_template_", "");
                 const selectedFont = document.getElementById("note_font_" + noteId).value;
+                const selectedFontSize = document.getElementById("note_fontsize_" + noteId).value;
                 
                 if (dropdown.value === "line") {
                     // Apply the line style to the textarea
@@ -271,6 +331,7 @@
 
                 noteTemplateInput.value = dropdown.value;
                 noteFontInput.value = selectedFont;
+                noteFontSizeInput.value = selectedFontSize;
             });
         });
 
@@ -302,6 +363,13 @@
                 const textarea = document.getElementById("note_content_" + noteId);
                 textarea.style.fontFamily = selectedFont;
             }
+
+            function changeFontSize(font, noteId){
+                const selectedFontSize = font.value;
+                const textarea = document.getElementById("note_content_" + noteId);
+                textarea.style.fontSize = selectedFontSize;
+            }
+        
     </script>
 </body>
 

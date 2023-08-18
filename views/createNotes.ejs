@@ -148,6 +148,14 @@
                 <option value="Lucida Handwriting">Lucida Handwriting</option>
                 <option value="Times New Roman">Times New Roman</option>
             </select>
+
+            <select id="note_fontsize" name="note_fontsize" onchange="changeFontSize(this)"  style="width: auto; border-radius: 5px; height: 100%; font-size: 20px; text-align: center;">
+                <option value="16px">16</option>
+                <option value="17px">17</option>
+                <option value="18px">18</option>
+                <option value="19px">19</option>
+                <option value="20px">20</option>
+            </select>
             
             <button style="border-radius: 5px; background-color: white; width: 20%; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">MIC</button>
             <button style="border-radius: 5px; background-color: white; width: auto; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">speech to text conversion</button>
@@ -156,11 +164,12 @@
       
     <!-- part 1 form contains the note content, note template and font, which is passed to form 2 upon form submission -->
     <form id="part1-form" style="margin-left: 10%; width: 85%;">
-        <textarea id="note_content" name="note_content" placeholder="enter the note content" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center; resize: none;" rows="18" required></textarea>
+        <textarea id="note_content" name="note_content" placeholder="enter the note content" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; text-align: center; resize: none;" rows="18" required></textarea>
         <br>
         <br>
         <input type="hidden" name="note_template" value="">
         <input type="hidden" name="note_font" value="">
+        <input type="hidden" name="note_fontsize" value="">
         <button type="button" id="next-button" style="margin-left:7.5%; margin-top:1%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;">SAVE</button>
     </form>
 
@@ -181,6 +190,7 @@
         <input id="note_content_hidden" type="hidden" name="note_content" value="">
         <input id="note_template_hidden" type="hidden" name="note_template" value="">
         <input id="note_font_hidden" type="hidden" name="note_font" value="">
+        <input id="note_fontsize_hidden" type="hidden" name="note_fontsize" value="">
         
         <!-- folder droplist will loop thorugh all the folders created by this user -->
         <% folders.forEach(function(folder) { %>
@@ -196,6 +206,7 @@
         const noteContentHidden = document.getElementById("note_content_hidden");
         const noteTemplateHidden = document.getElementById("note_template_hidden");
         const noteFontHidden = document.getElementById("note_font_hidden");
+        const noteFontSizeHidden = document.getElementById("note_fontsize_hidden");
 
         // Add an event listener to the button to switch to Part 2 form
         nextButton.addEventListener("click", (event) => {
@@ -209,11 +220,15 @@
 
             const noteFontInput = document.getElementById("note_font");
             const noteFontValue = noteFontInput.value;
+
+            const noteFontSizeInput = document.getElementById("note_fontsize");
+            const noteFontSizeValue = noteFontSizeInput.value;
     
             // Set the value to the hidden field in part2-form
             noteContentHidden.value = noteContentValue;
             noteTemplateHidden.value = noteTemplateValue;
             noteFontHidden.value = noteFontValue;
+            noteFontSizeHidden.value = noteFontSizeValue;
     
             // hide part 1 form, show part 2 form
             part1Form.style.display = "none";
@@ -248,6 +263,12 @@
             const selectedFont = font.value;
             const textarea = document.getElementById("note_content");
             textarea.style.fontFamily = selectedFont;
+        }
+
+        function changeFontSize(font){
+            const selectedFontSize = font.value;
+            const textarea = document.getElementById("note_content");
+            textarea.style.fontSize = selectedFontSize;
         }
         
     </script>

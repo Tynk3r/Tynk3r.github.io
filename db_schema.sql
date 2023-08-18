@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS note (
     note_content TEXT,
     note_template TEXT,
     note_font TEXT,
+    note_fontsize INT, 
     note_cdatetime DATETIME DEFAULT (datetime('now','localtime')),
     note_mdatetime DATETIME DEFAULT (datetime('now','localtime')),
     note_bookmarked BOOLEAN, 
@@ -54,7 +55,7 @@ CREATE TABLE IF NOT EXISTS note (
 -- INSERT INTO testUserRecords ("test_record_value", "test_user_id") VALUES( 'Lorem ipsum dolor sit amet', 1); --try changing the test_user_id to a different number and you will get an error
 INSERT INTO user ('user_name', 'user_email', 'user_password') VALUES ('jolene', 'j@gmail.com', '123');
 INSERT INTO folder('folder_name', 'user_id') VALUES ('agile', 1);
-INSERT INTO note ('note_title', 'note_subtitle', 'note_content','note_template', 'note_font', 'note_cdatetime', 'note_mdatetime','note_bookmarked', 'user_id', 'folder_id') VALUES ('title', 'subtitle','content','blank', 'Arial', '20230702 08:40:40', '20230702 08:40:40','no', 1, 1);
+INSERT INTO note ('note_title', 'note_subtitle', 'note_content','note_template', 'note_font', 'note_fontsize', 'note_cdatetime', 'note_mdatetime','note_bookmarked', 'user_id', 'folder_id') VALUES ('title', 'subtitle','content','blank', 'Arial','16', '20230702 08:40:40', '20230702 08:40:40','no', 1, 1);
 
 COMMIT;
 

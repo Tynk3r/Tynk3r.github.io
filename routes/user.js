@@ -223,8 +223,8 @@ router.post("/createNote", (req, res, next) => {
   // const template = req.body.note_template ? req.body.note_template : "blank";
 
   global.db.run(
-    "INSERT INTO note ('note_title', 'note_subtitle', 'note_content', 'note_template', 'note_font', 'note_cdatetime', 'note_mdatetime', 'note_bookmarked', 'user_id', 'folder_id') VALUES( ?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'),  ?, ?, ?);",
-    [req.body.note_title, req.body.note_subtitle, req.body.note_content, req.body.note_template, req.body.note_font, 'no',  userid, req.body.folder],
+    "INSERT INTO note ('note_title', 'note_subtitle', 'note_content', 'note_template', 'note_font', 'note_fontsize', 'note_cdatetime', 'note_mdatetime', 'note_bookmarked', 'user_id', 'folder_id') VALUES( ?, ?, ?, ?, ?,?, datetime('now', 'localtime'), datetime('now', 'localtime'),  ?, ?, ?);",
+    [req.body.note_title, req.body.note_subtitle, req.body.note_content, req.body.note_template, req.body.note_font, req.body.note_fontsize, 'no',  userid, req.body.folder],
     function (err) {
       if (err) {
         next(err); //send the error on to the error handler
@@ -287,8 +287,8 @@ router.post("/updateNoteSettings", (req, res, next) => {
 router.post("/updateNote", (req, res, next) => {
   const userid = req.session.userid;
   global.db.run(
-    "UPDATE note SET note_content = ?, note_template = ?, note_font = ?,  note_mdatetime = datetime('now', 'localtime') WHERE note_id = ?;",
-    [req.body.note_content, req.body.note_template, req.body.note_font, req.body.note_id],
+    "UPDATE note SET note_content = ?, note_template = ?, note_font = ?, note_fontsize = ?,  note_mdatetime = datetime('now', 'localtime') WHERE note_id = ?;",
+    [req.body.note_content, req.body.note_template, req.body.note_font, req.body.note_fontsize, req.body.note_id],
     function (err) {
       if (err) {
         next(err); //send the error on to the error handler
