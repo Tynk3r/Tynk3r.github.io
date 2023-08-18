@@ -114,6 +114,21 @@
             background-color: #04AA6D;
             color: white;
         }
+
+        .container {
+            display: flex;
+            align-items: center;
+        }
+
+        .image {
+            max-width: 300px;
+            max-height: 300px;
+            display: none;
+        }
+
+        .text {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -136,7 +151,35 @@
     </div>
     <!-- top nav allows user to change template and font -->
     <div class="topnav" style="border-radius: 10px;">
-        <div class="dropdown">
+       
+            <!-- <div class="container">
+                <input type="file" id="imageInput">
+                <img class="image" id="selectedImage" src="" alt="Selected Image">
+            </div>
+          
+            
+            <script>
+                const imageInput = document.getElementById('imageInput');
+                const selectedImage = document.getElementById('selectedImage');
+                const imageText = document.getElementById('imageText');
+                
+                imageInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    
+                    if (file) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = (e) => {
+                            selectedImage.src = e.target.result;
+                            selectedImage.style.display = 'block';
+                            imageText.style.display = 'block';
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                });
+            </script> -->
+
             <select id="note_template" name="note_template" onchange="applyTextareaStyle()"  style="margin-left:0.5%; width: 20%; height: 100%; border-radius: 5px;  font-size: 20px; text-align: center;"  >
                 <option value="blank">blank</option>
                 <option value="line">line</option>
