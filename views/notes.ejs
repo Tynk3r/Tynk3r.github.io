@@ -127,6 +127,7 @@
                 <select id="note_template_<%= note.note_id %>" name="note_template" onchange="applyTextareaStyle('<%= note.note_id %>')"  style="width: 20%; height: 100%; border-radius: 5px; font-size: 20px; text-align: center;">
                     <option value="blank" <% if (note.note_template === 'blank') { %>selected<% } %>>blank</option>
                     <option value="line" <% if (note.note_template === 'line') { %>selected<% } %>>line</option>
+                    <option value="grid" <% if (note.note_template === 'grid') { %>selected<% } %>>grid</option>
                 </select>
                 
                 <!-- droplist to show the available options for fonts, the data in the database will be reflected in the droplist -->
@@ -205,6 +206,17 @@
                     const textarea = document.getElementById("note_content_<%= note.note_id %>");
                     textarea.style.background = "none";
                     textarea.style.backgroundSize ="100% 25px";
+                    textarea.style.lineHeight = "normal";
+                });
+            </script>
+        <% } %>
+        <!-- if the value is grid, this will the css for the textarea -->
+        <% if(note.note_template === 'grid') { %>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const textarea = document.getElementById("note_content_<%= note.note_id %>");
+                    textarea.style.background = "linear-gradient(to bottom, transparent 23px, #ddd 23px, #ddd 24px, transparent 24px), linear-gradient(to right, transparent 5px, #ddd 5px, #ddd 6px, transparent 6px)";
+                    textarea.style.backgroundSize ="20px 25px";
                     textarea.style.lineHeight = "normal";
                 });
             </script>
@@ -328,7 +340,13 @@
                     textarea.style.background = "none";
                     textarea.style.lineHeight = "normal";
                 }
-
+                else if (dropdown.value === "grid") {
+                    // Apply the line style to the textarea
+                    const textarea = document.getElementById("note_content_" + noteId);
+                    textarea.style.background = "linear-gradient(to bottom, transparent 23px, #ddd 23px, #ddd 24px, transparent 24px), linear-gradient(to right, transparent 5px, #ddd 5px, #ddd 6px, transparent 6px)";
+                    textarea.style.backgroundSize = "20px 25px";
+                    textarea.style.lineHeight = "25px";
+                }
                 noteTemplateInput.value = dropdown.value;
                 noteFontInput.value = selectedFont;
                 noteFontSizeInput.value = selectedFontSize;
