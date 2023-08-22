@@ -122,11 +122,47 @@
     
 
     <!-- form to update the note content, template and font -->
-    <form id="summary" style="margin-left: 10%; width: 85%">
-            <textarea type="text" id="summary" name="summary" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;" rows="20"></textarea>
-            <button type="submit" id="updateBtn" style="margin-left:7.5%; margin-top:1%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;">SAVE</button>
-       
+    <form id="noteSummaryForm" style="margin-left: 10%; width: 85%">
+            <textarea type="text" id="noteSummary" name="noteSummary" style="margin-left:7.5%; margin-top:3%; width: 85%; border-radius: 5px; height: auto; font-size: 20px; text-align: center;" rows="20"></textarea>
     </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const noteContent = urlParams.get('noteContent');
+
+        const textarea = document.getElementById('noteSummary');
+        textarea.value = 'Generating summary...';
+
+        async function generateText() {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': "Bearer " + '<%= api_key %>'
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo', 
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are a helpful assistant.' // Set the assistant's role
+                        },
+                        {
+                            role: 'user',
+                            content: 'Please generate a summary of the following text in full and extreme detail: ' + decodeURIComponent(noteContent) 
+                        }
+                    ],
+                    max_tokens: 1000
+                })
+            });
+
+            const data = await response.json();
+            console.log(data);
+            textarea.value = data.choices[0].message.content.trim();
+        }
+
+        generateText();
+    </script>
 
     
 </body>

@@ -359,10 +359,13 @@
                                 </form>
 
                                 <form action="summary" method="get">
-                                    <button style="width: 80%; height: 30px; border-radius: 5px; margin-left:10%; background-color: white; border: 2px solid blue;"> summary </button>
+                                    <input type="hidden" name="noteContent" value="<%= note.note_content %>">
+                                    <button style="width: 80%; height: 30px; border-radius: 5px; margin-left:10%; background-color: white; border: 2px solid blue;">summary</button>
                                 </form>
+
                                 <form action="rv" method="get">
-                                    <button style="width: 80%; height: 30px; border-radius: 5px; margin-left:10%; background-color: white; border: 2px solid blue;"> revision question </button>
+                                    <input type="hidden" name="noteContent" value="<%= note.note_content %>">
+                                    <button style="width: 80%; height: 30px; border-radius: 5px; margin-left:10%; background-color: white; border: 2px solid blue;">revision question</button>
                                 </form>
                                 
                             </div>
