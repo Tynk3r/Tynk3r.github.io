@@ -11,7 +11,7 @@ const assert = require('assert');
 
 router.use(express.json()); // Parse JSON-encoded bodies
 router.use(express.urlencoded({ extended: true }));
-router.use( express.static( "views" ) );
+router.use(express.static("views"));
 
 /**
  * @desc retrieves the current users
@@ -27,7 +27,7 @@ router.get("/get-test-users", (req, res, next) => {
       res.json(rows);
     }
   });
-  
+
 });
 
 /**
@@ -88,7 +88,7 @@ router.post("/login", (req, res, next) => {
     function (err, row) {
       if (err) {
         // Send the error to the error handler
-        console.log(err); 
+        console.log(err);
         //if username does not exist
       } else if (!row) {
         //redirect user back to login page to prevent unauthorizes access
@@ -98,7 +98,7 @@ router.post("/login", (req, res, next) => {
         bcrypt.compare(req.body.user_password, row.user_password, (err, rows) => {
           if (err) {
             // Send the error to the error handler
-            console.log(err); 
+            console.log(err);
             // if password match, 
           } else if (rows === true) {
             //set session storage user id to id of the retrieved user
@@ -125,27 +125,24 @@ router.post("/register", (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, pw) => {
     if (err) {
       // Send the error to the error handler
-      console.log(err); 
+      console.log(err);
     } else {
       //do a post query, insert the name, email, hashed password, role into the db, user
       global.db.run(
         "INSERT INTO user ('user_name', 'user_email', 'user_password') VALUES( ?, ?, ?);",
         [req.body.name, req.body.email, pw],
-        function (err) 
-        {
-          if (err) 
-          {
+        function (err) {
+          if (err) {
             //send the error on to the error handler
-            console.log(err); 
-          } 
-          else 
-          {
+            console.log(err);
+          }
+          else {
             //upon sucessful registration, direct user to login page 
             res.redirect("/login");
           }
         });
-      }
     }
+  }
   );
 });
 
@@ -153,37 +150,37 @@ router.post("/register", (req, res, next) => {
 router.get("/getAllNotes", (req, res, next) => {
   const userid = req.session.userid;
   global.db.all("SELECT * FROM note WHERE note.user_id  = ?",
-  [userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      global.db.all("SELECT * FROM user WHERE user.user_id  = ?",
-      [userid], 
-      function (err, row) {
-        if (err) {
-          next(err); //send the error on to the error handler
-        } else {
-          global.db.all("SELECT * FROM folder WHERE folder.user_id  = ?",
-          [userid], 
-          function (err, folder) {
+    [userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        global.db.all("SELECT * FROM user WHERE user.user_id  = ?",
+          [userid],
+          function (err, row) {
             if (err) {
               next(err); //send the error on to the error handler
             } else {
-              rows.sort((note1, note2) => {
-                const date1 = new Date(note1.note_mdatetime);
-                const date2 = new Date(note2.note_mdatetime);
-                return date2 - date1;
-              });
-              res.render("home", {notes: rows, users: row, folders: folder});
-              next();
+              global.db.all("SELECT * FROM folder WHERE folder.user_id  = ?",
+                [userid],
+                function (err, folder) {
+                  if (err) {
+                    next(err); //send the error on to the error handler
+                  } else {
+                    rows.sort((note1, note2) => {
+                      const date1 = new Date(note1.note_mdatetime);
+                      const date2 = new Date(note2.note_mdatetime);
+                      return date2 - date1;
+                    });
+                    res.render("home", { notes: rows, users: row, folders: folder });
+                    next();
+                  }
+                })
             }
           })
-        }
-      })
-    }
-  })
-})  
+      }
+    })
+})
 
 
 router.get("/getIndivNote", (req, res, next) => {
@@ -191,31 +188,31 @@ router.get("/getIndivNote", (req, res, next) => {
   //NB. it's better NOT to use arrow functions for callbacks with this library
   const userid = req.session.userid;
   global.db.all("SELECT * FROM note WHERE note_id  = ?",
-  [req.query.note_id], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      global.db.all("SELECT * FROM folder", 
-      function (err, row) {
-        if (err) {
-          next(err); //send the error on to the error handler
-        } else {
-            global.db.all("SELECT * from user WHERE user_id  = ?",
-            [userid], 
-            function (err, u) {
-              if (err) {
-                next(err); //send the error on to the error handler
-              } else {
-                res.render("notes", {notes: rows, folders: row, users: u});
-                next();
-              }
-            })   
-          }
-        })
+    [req.query.note_id],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        global.db.all("SELECT * FROM folder",
+          function (err, row) {
+            if (err) {
+              next(err); //send the error on to the error handler
+            } else {
+              global.db.all("SELECT * from user WHERE user_id  = ?",
+                [userid],
+                function (err, u) {
+                  if (err) {
+                    next(err); //send the error on to the error handler
+                  } else {
+                    res.render("notes", { notes: rows, folders: row, users: u });
+                    next();
+                  }
+                })
+            }
+          })
       }
     });
-  });
+});
 
 
 router.post("/createNote", (req, res, next) => {
@@ -224,7 +221,7 @@ router.post("/createNote", (req, res, next) => {
 
   global.db.run(
     "INSERT INTO note ('note_title', 'note_subtitle', 'note_content', 'note_template', 'note_font', 'note_fontsize', 'note_cdatetime', 'note_mdatetime', 'note_bookmarked', 'user_id', 'folder_id') VALUES( ?, ?, ?, ?, ?,?, datetime('now', 'localtime'), datetime('now', 'localtime'),  ?, ?, ?);",
-    [req.body.note_title, req.body.note_subtitle, req.body.note_content, req.body.note_template, req.body.note_font, req.body.note_fontsize, 'no',  userid, req.body.folder],
+    [req.body.note_title, req.body.note_subtitle, req.body.note_content, req.body.note_template, req.body.note_font, req.body.note_fontsize, 'no', userid, req.body.folder],
     function (err) {
       if (err) {
         next(err); //send the error on to the error handler
@@ -245,27 +242,27 @@ router.get("/updateNoteSettings", (req, res, next) => {
         next(err); //send the error on to the error handler
       } else {
         global.db.all(
-        "SELECT * FROM user WHERE user_id = ?;",
-        [userid],
-        function (err, row) {
-          if (err) {
-            next(err); //send the error on to the error handler
-          } else {
-            global.db.all(
-            "SELECT * FROM folder WHERE user_id = ?;",
-            [userid],
-            function (err, folder) {
-              if (err) {
-                next(err); //send the error on to the error handler
-              } else {
-              res.render("editNotes", {notes:rows, users:row, folders: folder});
-              next();
+          "SELECT * FROM user WHERE user_id = ?;",
+          [userid],
+          function (err, row) {
+            if (err) {
+              next(err); //send the error on to the error handler
+            } else {
+              global.db.all(
+                "SELECT * FROM folder WHERE user_id = ?;",
+                [userid],
+                function (err, folder) {
+                  if (err) {
+                    next(err); //send the error on to the error handler
+                  } else {
+                    res.render("editNotes", { notes: rows, users: row, folders: folder });
+                    next();
+                  }
+                })
             }
           })
-        }
-      })
-    }
-  });
+      }
+    });
 });
 
 router.post("/updateNoteSettings", (req, res, next) => {
@@ -318,80 +315,80 @@ router.post("/deleteNote", (req, res, next) => {
 router.get("/notes", (req, res, next) => {
   const userid = req.session.userid;
   global.db.all("SELECT * from folder WHERE user_id  = ?",
-  [userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      global.db.all("SELECT * from user WHERE user_id  = ?",
-      [userid], 
-      function (err, row) {
-        if (err) {
-          next(err); //send the error on to the error handler
-        } else {
-          global.db.all("SELECT * from note WHERE note.user_id  = ?",
-          [userid], 
-          function (err, note) {
+    [userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        global.db.all("SELECT * from user WHERE user_id  = ?",
+          [userid],
+          function (err, row) {
             if (err) {
               next(err); //send the error on to the error handler
             } else {
-              res.render("createNotes", {folders: rows, users: row, notes:note});
+              global.db.all("SELECT * from note WHERE note.user_id  = ?",
+                [userid],
+                function (err, note) {
+                  if (err) {
+                    next(err); //send the error on to the error handler
+                  } else {
+                    res.render("createNotes", { folders: rows, users: row, notes: note });
+                  }
+                })
             }
           })
-        }
-      })
-    }
-  });
+      }
+    });
 });
 
 
-router.get("/userprofile", (req,res,next) => {
+router.get("/userprofile", (req, res, next) => {
   const userid = req.session.userid;
   global.db.all("SELECT * FROM user WHERE user_id  = ?",
-  [userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      res.render("userprofile", {users: rows});
-      next();
-    }
-  });
+    [userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        res.render("userprofile", { users: rows });
+        next();
+      }
+    });
 })
 
-router.post("/updateUser", (req,res,next) => {
+router.post("/updateUser", (req, res, next) => {
   const userid = req.session.userid;
   global.db.run("UPDATE user SET user_name = ?, user_email = ? WHERE user_id  = ?",
-  [req.body.user_name, req.body.user_email, userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      global.db.all("SELECT * FROM user WHERE user_id  = ?",
-      [userid], 
-      function (err, rows) {
-        if (err) {
-          next(err); //send the error on to the error handler
-        } else {
-          res.render("userprofile", {users: rows});
-          next();
-        }
-      })
-    }
-  });
+    [req.body.user_name, req.body.user_email, userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        global.db.all("SELECT * FROM user WHERE user_id  = ?",
+          [userid],
+          function (err, rows) {
+            if (err) {
+              next(err); //send the error on to the error handler
+            } else {
+              res.render("userprofile", { users: rows });
+              next();
+            }
+          })
+      }
+    });
 })
 
-router.post("/deleteUser", (req,res,next) => {
+router.post("/deleteUser", (req, res, next) => {
   const userid = req.session.userid;
   global.db.run("DELETE FROM user WHERE user_id = ?",
-  [userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
+    [userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
         res.redirect("login");
-    }
-  });
+      }
+    });
 })
 
 
@@ -412,40 +409,40 @@ router.post("/createFolder", (req, res, next) => {
 });
 
 
-router.get("/getNotesFromFolder", (req,res,next) => {
+router.get("/getNotesFromFolder", (req, res, next) => {
   const userid = req.session.userid;
   global.db.all("SELECT * FROM note WHERE folder_id  = ?",
-  [req.query.folder_id], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      global.db.all("SELECT * FROM user WHERE user.user_id  = ?",
-      [userid], 
-      function (err, row) {
-        if (err) {
-          next(err); //send the error on to the error handler
-        } else {
-          // res.render("home", {folders: rows, users: row});
-          global.db.all("SELECT * FROM folder WHERE folder.user_id  = ?",
-          [userid], 
-          function (err, folder) {
+    [req.query.folder_id],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        global.db.all("SELECT * FROM user WHERE user.user_id  = ?",
+          [userid],
+          function (err, row) {
             if (err) {
               next(err); //send the error on to the error handler
             } else {
-              rows.sort((note1, note2) => {
-                const date1 = new Date(note1.note_mdatetime);
-                const date2 = new Date(note2.note_mdatetime);
-                return date2 - date1;
-              });
-              res.render("home", {notes: rows, users: row, folders: folder});
-              next();
+              // res.render("home", {folders: rows, users: row});
+              global.db.all("SELECT * FROM folder WHERE folder.user_id  = ?",
+                [userid],
+                function (err, folder) {
+                  if (err) {
+                    next(err); //send the error on to the error handler
+                  } else {
+                    rows.sort((note1, note2) => {
+                      const date1 = new Date(note1.note_mdatetime);
+                      const date2 = new Date(note2.note_mdatetime);
+                      return date2 - date1;
+                    });
+                    res.render("home", { notes: rows, users: row, folders: folder });
+                    next();
+                  }
+                })
             }
           })
-        }
-      })
-    }
-  });
+      }
+    });
 })
 
 router.post("/bookmarkNote", (req, res, next) => {
@@ -496,7 +493,7 @@ router.get("/bookmarkNote", (req, res, next) => {
             if (err) {
               next(err); //send the error on to the error handler
             } else {
-              res.render("bookmarks", {notes: rows, users:row});
+              res.render("bookmarks", { notes: rows, users: row });
               next();
             }
           }
@@ -529,30 +526,30 @@ router.get("/search", (req, res, next) => {
                 next(err); //send the error on to the error handler
               } else {
                 global.db.all("SELECT * FROM folder WHERE folder.user_id  = ?",
-                [userid], 
-                function (err, folder) {
-                  if (err) {
-                    next(err); //send the error on to the error handler
-                  } else {
-                    rows.sort((note1, note2) => {
-                      const date1 = new Date(note1.note_mdatetime);
-                      const date2 = new Date(note2.note_mdatetime);
-                      return date2 - date1;
-                    });
-                    res.render("home", {notes: rows, users: row, folders: folder});
-                    next();
-                  }
-                })
+                  [userid],
+                  function (err, folder) {
+                    if (err) {
+                      next(err); //send the error on to the error handler
+                    } else {
+                      rows.sort((note1, note2) => {
+                        const date1 = new Date(note1.note_mdatetime);
+                        const date2 = new Date(note2.note_mdatetime);
+                        return date2 - date1;
+                      });
+                      res.render("home", { notes: rows, users: row, folders: folder });
+                      next();
+                    }
+                  })
               }
             }
           );
-        } 
+        }
         else {
           // No articles found, redirect to all reader home page
           res.redirect("/getAllNotes");
         }
       }
-    }   
+    }
   );
 });
 
@@ -580,59 +577,61 @@ router.get("/searchBookmark", (req, res, next) => {
                 next(err); //send the error on to the error handler
               } else {
                 global.db.all("SELECT * FROM folder WHERE folder.user_id  = ?",
-                [userid], 
-                function (err, folder) {
-                  if (err) {
-                    next(err); //send the error on to the error handler
-                  } else {
-                    rows.sort((note1, note2) => {
-                      const date1 = new Date(note1.note_mdatetime);
-                      const date2 = new Date(note2.note_mdatetime);
-                      return date2 - date1;
-                    });
-                    res.render("bookmarks", {notes: rows, users: row, folders: folder});
-                    next();
-                  }
-                })
+                  [userid],
+                  function (err, folder) {
+                    if (err) {
+                      next(err); //send the error on to the error handler
+                    } else {
+                      rows.sort((note1, note2) => {
+                        const date1 = new Date(note1.note_mdatetime);
+                        const date2 = new Date(note2.note_mdatetime);
+                        return date2 - date1;
+                      });
+                      res.render("bookmarks", { notes: rows, users: row, folders: folder });
+                      next();
+                    }
+                  })
               }
             }
           );
-        } 
+        }
         else {
           // No articles found, redirect to all reader home page
           res.redirect("/bookmarkNote");
         }
       }
-    }   
+    }
   );
 });
 
-router.get("/summary", (req,res,next) => {
+router.get("/summary", (req, res, next) => {
   const userid = req.session.userid;
+  const noteContent = req.query.noteContent;
+
   global.db.all("SELECT * FROM user WHERE user_id  = ?",
-  [userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      res.render("summary", {users: rows});
-      next();
-    }
-  });
+    [userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        res.render("summary", { users: rows, noteContent });
+        next();
+      }
+    });
 })
 
-router.get("/rv", (req,res,next) => {
+router.get("/rv", (req, res, next) => {
   const userid = req.session.userid;
   global.db.all("SELECT * FROM user WHERE user_id  = ?",
-  [userid], 
-   function (err, rows) {
-    if (err) {
-      next(err); //send the error on to the error handler
-    } else {
-      res.render("rv", {users: rows});
-      next();
-    }
-  });
+    [userid],
+    function (err, rows) {
+      if (err) {
+        next(err); //send the error on to the error handler
+      } else {
+        res.render("rv", { users: rows });
+        next();
+      }
+    });
 })
 
 

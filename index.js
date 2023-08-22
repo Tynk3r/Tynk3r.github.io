@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const app = express();
+const path = require('path');
 const port = 3000;
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require("body-parser");
@@ -9,11 +10,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //items in the global namespace are accessible throught out the node application
-global.db = new sqlite3.Database('./database.db',function(err){
-  if(err){
+global.db = new sqlite3.Database('./database.db', function (err) {
+  if (err) {
     console.error(err);
     process.exit(1); //Bail out we can't connect to the DB
-  }else{
+  } else {
     console.log("Database connected");
     global.db.run("PRAGMA foreign_keys=ON"); //This tells SQLite to pay attention to foreign key constraints
   } // testing
