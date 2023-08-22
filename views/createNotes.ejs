@@ -201,8 +201,10 @@
                 <option value="20px">20</option>
             </select>
             
-            <button style="border-radius: 5px; background-color: white; width: 20%; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">MIC</button>
-            <button style="border-radius: 5px; background-color: white; width: auto; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">speech to text conversion</button>
+            <input type="file" id="audioUpload" style="display: none;">
+            <button id="audioButton" onclick="recordFunction(this, '0')" style="border-radius: 5px; background-color: white; width: 20%; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">Start Recording</button>
+            <input type="file" id="videoUpload" style="display: none;">
+            <button id="uploadButton" onclick="uploadFunction(this, '0')" style="border-radius: 5px; background-color: white; width: auto; margin-top: 0.5%; margin-bottom: 0.5%; height: 10%; font-size: 20px; text-align: center;">Speech to Text</button>
         </div>
     </div>
       
@@ -321,7 +323,148 @@
             const textarea = document.getElementById("note_content");
             textarea.style.fontSize = selectedFontSize;
         }
-        
+
+        recording = false;
+        function recordFunction(button, noteId) {
+            if (!recording) {
+                recording = true;
+                const textarea = document.getElementById("note_content");
+                textarea.value = 'Recording...';
+                document.getElementById("audioButton").innerHTML = 'Stop Recording';
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Start recording the user's microphone
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then((stream) => {
+                        // Create a media recorder
+                        const mediaRecorder = new MediaRecorder(stream);
+
+                        // Set up data chunks for the recorded audio
+                        const audioChunks = [];
+
+                        // Start recording
+                        mediaRecorder.start();
+
+                        // Event listener for when the recording is stopped
+                        mediaRecorder.addEventListener("stop", () => {
+                            // Convert the recorded audio chunks into a Blob
+                            const audioBlob = new Blob(audioChunks);
+
+                            // Create a FileReader to read the audio Blob as data
+                            const reader = new FileReader();
+
+                            // Event listener for when the FileReader has finished reading the audio Blob
+                            reader.addEventListener("loadend", () => {
+                                recording = false;
+                                // Get the audio data as an ArrayBuffer
+                                const audioData = reader.result;
+
+                                // Convert the ArrayBuffer to a Blob
+                                const audioBlobData = new Blob([new Uint8Array(audioData)]);
+
+                                // Create a file from the audio Blob
+                                const audioFile = new File([audioBlobData], "recording.wav", { type: "audio/wav" });
+
+                                // Perform the upload and transcription
+                                document.getElementById("audioButton").innerHTML = 'Start Recording';
+                                audioContext.close();
+                                transcribeAudio(audioFile);
+                            });
+
+                            // Read the audio Blob as data
+                            reader.readAsArrayBuffer(audioBlob);
+                        });
+
+                        // Event listener for when data is available from the recorded audio
+                        mediaRecorder.addEventListener("dataavailable", (event) => {
+                            // Push the audio data to the chunks
+                            audioChunks.push(event.data);
+                        });
+
+                        // Stop recording and disable the microphone when the button is clicked
+                        button.addEventListener("click", () => {
+                            mediaRecorder.stop();
+                            stream.getTracks().forEach(track => track.stop());
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+        }
+
+        // Function to transcribe the uploaded audio
+        function transcribeAudio(file) {
+            console.log('<%= api_key %>');
+            const textarea = document.getElementById("note_content");
+            textarea.value = 'Transcribing...';
+
+            var formData = new FormData();
+            formData.append("file", file);
+            formData.append("model", "whisper-1");
+
+            // Make the POST request to OpenAI API
+            fetch("https://api.openai.com/v1/audio/transcriptions", {
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer " + '<%= api_key %>',
+                },
+                body: formData,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                // Handle the API response here
+                console.log(data);
+                textarea.value = data.text;
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        }
+
+            
+        function uploadFunction(button, noteId) {
+            document.getElementById("videoUpload").click();
+
+            document.getElementById("videoUpload").addEventListener("change", function() {
+                var startfile = document.getElementById("videoUpload").files[0];
+
+                // Error handling
+                if (!startfile) {
+                    // if no file is selected
+                    return;
+                }
+                console.log(startfile.type)
+                if (startfile.type !== "audio/mpeg") {
+                    alert("Please upload an mp3 file");
+                    return;
+                }
+                const textarea = document.getElementById("note_content");
+                textarea.value = 'Transcribing...';
+
+                var formData = new FormData();
+                formData.append("file", startfile);
+                formData.append("model", "whisper-1");
+
+                // Make the POST request to OpenAI API
+                fetch("https://api.openai.com/v1/audio/transcriptions", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + '<%= api_key %>',
+                    },
+                    body: formData,
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Handle the API response here
+                    console.log(data);
+                    textarea.value = data.text;
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+            });
+        }
     </script>
     
     

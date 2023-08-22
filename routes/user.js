@@ -8,6 +8,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const assert = require('assert');
+const api_key = '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'; // remove this line before github
 
 router.use(express.json()); // Parse JSON-encoded bodies
 router.use(express.urlencoded({ extended: true }));
@@ -204,7 +205,7 @@ router.get("/getIndivNote", (req, res, next) => {
                   if (err) {
                     next(err); //send the error on to the error handler
                   } else {
-                    res.render("notes", { notes: rows, folders: row, users: u });
+                    res.render("notes", { notes: rows, folders: row, users: u, api_key: api_key });
                     next();
                   }
                 })
@@ -255,7 +256,7 @@ router.get("/updateNoteSettings", (req, res, next) => {
                   if (err) {
                     next(err); //send the error on to the error handler
                   } else {
-                    res.render("editNotes", { notes: rows, users: row, folders: folder });
+                    res.render("editNotes", { notes: rows, users: row, folders: folder, api_key: api_key });
                     next();
                   }
                 })
@@ -332,7 +333,7 @@ router.get("/notes", (req, res, next) => {
                   if (err) {
                     next(err); //send the error on to the error handler
                   } else {
-                    res.render("createNotes", { folders: rows, users: row, notes: note });
+                    res.render("createNotes", { folders: rows, users: row, notes: note, api_key: api_key });
                   }
                 })
             }
@@ -614,7 +615,7 @@ router.get("/summary", (req, res, next) => {
       if (err) {
         next(err); //send the error on to the error handler
       } else {
-        res.render("summary", { users: rows, noteContent });
+        res.render("summary", { users: rows, noteContent, api_key: api_key });
         next();
       }
     });
@@ -628,7 +629,7 @@ router.get("/rv", (req, res, next) => {
       if (err) {
         next(err); //send the error on to the error handler
       } else {
-        res.render("rv", { users: rows });
+        res.render("rv", { users: rows, api_key: api_key });
         next();
       }
     });

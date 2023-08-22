@@ -138,7 +138,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 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' // Replace with your OpenAI API key
+                    'Authorization': "Bearer " + '<%= api_key %>'
                 },
                 body: JSON.stringify({
                     model: 'gpt-3.5-turbo', 
